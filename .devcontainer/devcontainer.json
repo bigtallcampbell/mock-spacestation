@@ -22,8 +22,9 @@
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "spacedev",
-
-	"postStartCommand": "/workspaces/mock-spacestation/.devcontainer/startSpaceStation.sh",
+	"workspaceFolder": "/mock-groundstation",
+	"workspaceMount": "source=${localWorkspaceFolder}/,target=/mock-groundstation,type=bind",
+	"postStartCommand": "/mock-groundstation/.devcontainer/startSpaceStation.sh",
 	"build": {
 		"args": {
 			"UPGRADE_PACKAGES": "true"

@@ -1,5 +1,5 @@
 #!/bin/bash
-login_msg="/workspaces/mock-spacestation/.devcontainer/motd/groundstation.motd"
+login_msg="/mock-groundstation/.devcontainer/motd/groundstation.motd"
 while IFS= read -r line
 do
   echo "$line"

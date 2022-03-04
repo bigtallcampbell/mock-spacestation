@@ -20,7 +20,7 @@ ENV DOCKER_BUILDKIT=1
 ARG USERNAME=automatic
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-COPY /workspaces/mock-spacestation/.devcontainer/library-scripts/*.sh /tmp/library-scripts/
+COPY /mock-groundstation/.devcontainer/library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
     # Use Docker script from script library to set things up
@@ -32,25 +32,17 @@ RUN apt-get update \
     && chmod 0700 /root/.ssh \
     && ssh-keygen -A \
     && mkdir -p /run/sshd \
+    && mkdir -p /root/sync \
     # Clean up
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
 VOLUME [ "/var/lib/docker" ]
 
-COPY /workspaces/mock-spacestation/.devcontainer/motd/spacestation.motd /etc/motd
-
-
+COPY /mock-groundstation/.devcontainer/motd/spacestation.motd /etc/motd
 
 EXPOSE 22
 
-# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine
-# inside the container "overrideCommand": false is set in devcontainer.json.
-# The script will also execute CMD if you need to alter startup behaviors.
-ENTRYPOINT ["/usr/local/share/docker-init.sh" ]
-#CMD [ "sleep", "infinity" ]
-#CMD ["service", "ssh", "start" ]
-CMD ["/usr/sbin/sshd", "-D" ]
+WORKDIR /root/sync
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+ENTRYPOINT ["/usr/local/share/docker-init.sh" ]
+CMD ["/usr/sbin/sshd", "-D" ]

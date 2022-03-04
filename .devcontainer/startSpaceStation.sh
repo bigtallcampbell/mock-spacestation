@@ -8,6 +8,11 @@
 #
 #
 
+echo ""
+echo "--------------------------------------------------"
+echo "Mock-SpaceStation Deployment"
+echo "Please wait wihle the Mock-SpaceStation is configured and deployed"
+
 MOCK_SPACESTATION_NETWORK_NAME="mock-spacestation-vnet"
 MOCK_SPACESTATION_CONTAINER_NAME="mock-spacestation"
 MOCK_SPACESTATION_IMAGE_NAME="mock-spacestation-image"
@@ -35,7 +40,7 @@ if [ -z "${CONTAINER_RUNNING}" ]; then #Grep results is null.  Container is not 
 
     IMAGE_DEPLOYED=$(docker images | grep $MOCK_SPACESTATION_IMAGE_NAME)
     if [ -z "${IMAGE_DEPLOYED}" ]; then #Grep results is null.  Image is not deployed.  Deploy build it
-        docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /workspaces/mock-spacestation/.devcontainer/Dockerfile.SpaceStation /
+        docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /mock-groundstation/.devcontainer/Dockerfile.SpaceStation /
     fi
 
     docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --network $MOCK_SPACESTATION_NETWORK_NAME --name $MOCK_SPACESTATION_CONTAINER_NAME "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
@@ -63,7 +68,16 @@ if [ -z "${HAS_KNOWN_HOSTS}" ]; then
     docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/authorized_keys
 fi
 
-echo "Mock-GroundStation and Mock-SpaceStation successfully configured."
-echo "Access Mock-SpaceStation: ssh root@mock-spacestation"
+chmod +x /mock-groundstation/sync-with-spacestation.sh
+
+echo ""
+echo "--------------------------------------------------"
+echo "Mock-SpaceStation Successfully deployed"
+echo ""
+echo ""
+bash /mock-groundstation/.devcontainer/motd/groundstation.sh
+echo ""
+echo ""
+echo "To get started, open a new terminal, run sync, or start developing"
 
 

@@ -15,4 +15,6 @@
        // || \\                     ____) | || (_| | |_| | (_) | | | |
     __//__||__\\__                 |_____/ \__\__,_|\__|_|\___/|_| |_|
    '--------------'
-
+   To access Mock-SpaceStation: ssh root@mock-spacestation
+   To sync with Mock-SpaceStation: ./sync-with-spacestation.sh (./sync-with-spacestation.sh --no-throttle)
+           GroundStation sync directory: /mock-spacestation/sync
