@@ -23,6 +23,13 @@ if ! [ -f "/root/.ssh/id_rsa" ];then
     ssh-keygen -f /root/.ssh/id_rsa -N ''
 fi
 
+
+if [ ! -d "/mock-groundstation/sync" ]; then
+    #Sync directory doesn't exist.  Create it and add a placeholder file
+    mkdir -p /mock-groundstation/sync
+    echo "What is an astronaut's favorite dance?  The moonwalk!" > /mock-groundstation/sync/sample-file-from-ground.txt
+fi
+
 HAS_NETWORK=$(docker network ls | grep $MOCK_SPACESTATION_NETWORK_NAME)
 if [ -z "${HAS_NETWORK}" ]; then
     docker network create --internal $MOCK_SPACESTATION_NETWORK_NAME
@@ -67,6 +74,8 @@ if [ -z "${HAS_KNOWN_HOSTS}" ]; then
     docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/id_rsa.pub
     docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/authorized_keys
 fi
+
+
 
 chmod +x /mock-groundstation/sync-with-spacestation.sh
 
