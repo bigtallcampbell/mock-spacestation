@@ -23,6 +23,11 @@ if ! [ -f "/root/.ssh/id_rsa" ];then
     ssh-keygen -f /root/.ssh/id_rsa -N ''
 fi
 
+# GitHub Codespace workaround
+if [ ! -d "/mock-groundstation" ]; then
+    #mock-groundstation doesn't exist.  Create a symbolic link to point to it
+    ln -s /workspaces/mock-spacestation /mock-groundstation
+fi
 
 if [ ! -d "/mock-groundstation/sync" ]; then
     #Sync directory doesn't exist.  Create it and add a placeholder file
