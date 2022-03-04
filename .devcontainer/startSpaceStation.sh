@@ -24,7 +24,7 @@ if ! [ -f "/root/.ssh/id_rsa" ];then
 fi
 
 # GitHub Codespace workaround
-if [ ! -d "/mock-groundstation" ]; then
+if ! [ -d "/mock-groundstation" ]; then
     #mock-groundstation doesn't exist.  Create a symbolic link to point to it
     ln -s /workspaces/mock-spacestation /mock-groundstation
 fi
@@ -52,7 +52,7 @@ if [ -z "${CONTAINER_RUNNING}" ]; then #Grep results is null.  Container is not 
 
     IMAGE_DEPLOYED=$(docker images | grep $MOCK_SPACESTATION_IMAGE_NAME)
     if [ -z "${IMAGE_DEPLOYED}" ]; then #Grep results is null.  Image is not deployed.  Deploy build it
-        docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /mock-groundstation/.devcontainer/Dockerfile.SpaceStation /
+        docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /mock-groundstation/.devcontainer/Dockerfile.SpaceStation /mock-groundstation/.devcontainer
     fi
 
     docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --network $MOCK_SPACESTATION_NETWORK_NAME --name $MOCK_SPACESTATION_CONTAINER_NAME "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
