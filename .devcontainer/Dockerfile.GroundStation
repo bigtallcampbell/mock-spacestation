@@ -30,8 +30,6 @@ RUN apt-get update \
 
 VOLUME [ "/var/lib/docker" ]
 
-WORKDIR /mock-groundstation
-
 #Add the welcome message to the bash profile to help users remember which system they're on
 RUN echo "bash /mock-groundstation/.devcontainer/motd/groundstation.sh" >> /root/.bashrc \
     #Generate SSH key for current user
