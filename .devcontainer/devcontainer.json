@@ -24,7 +24,7 @@
 	//"remoteUser": "spacedev",
 	"workspaceFolder": "/mock-groundstation",
 	"workspaceMount": "source=${localWorkspaceFolder}/,target=/mock-groundstation,type=bind",
-	"postStartCommand": "/mock-groundstation/.devcontainer/startSpaceStation.sh",
+	"postStartCommand": "./.devcontainer/startSpaceStation.sh",
 	"build": {
 		"args": {
 			"UPGRADE_PACKAGES": "true"
