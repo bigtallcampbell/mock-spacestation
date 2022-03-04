@@ -3,7 +3,7 @@
 {
 	"name": "Mock-GroundStation",
 	"dockerFile": "Dockerfile.GroundStation",
-	"runArgs": ["--init", "--privileged"],
+	"runArgs": ["--init", "--privileged", "--name=mock-groundstation"],
 	"mounts": ["source=dind-var-lib-docker,target=/var/lib/docker,type=volume"],
 	"overrideCommand": false,
 
@@ -22,6 +22,8 @@
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "spacedev",
+
+	"postStartCommand": "/workspaces/mock-spacestation/.devcontainer/startSpaceStation.sh",
 	"build": {
 		"args": {
 			"UPGRADE_PACKAGES": "true"

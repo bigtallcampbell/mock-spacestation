@@ -37,9 +37,6 @@ RUN apt-get update \
 
 VOLUME [ "/var/lib/docker" ]
 
-COPY /root/.ssh/id_rsa /root/.ssh/id_rsa
-COPY /root/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
-COPY /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 COPY /workspaces/mock-spacestation/.devcontainer/motd/spacestation.motd /etc/motd
 
 

@@ -26,24 +26,20 @@ RUN apt-get update \
     # Use Docker script from script library to set things up
     && /bin/bash /tmp/library-scripts/docker-in-docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "${USERNAME}" "${USE_MOBY}" "${DOCKER_VERSION}" \
     # Clean up
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 VOLUME [ "/var/lib/docker" ]
 
 #Add the welcome message to the bash profile to help users remember which system they're on
 RUN echo "bash /workspaces/mock-spacestation/.devcontainer/motd/groundstation.sh" >> /root/.bashrc \
     #Generate SSH key for current user
-    && ssh-keygen -f /root/.ssh/id_rsa -N '' \
-    #Build and Deploy the embedded Mock-SpaceStation Container with docker-in-docker enabled
-    && docker build -t mock-spacestation-image:latest --no-cache -f /workspaces/mock-spacestation/.devcontainer/Dockerfile.SpaceStation / \
-    && docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --name mock-spacestation mock-spacestation-image:latest
-
+    && ssh-keygen -f /root/.ssh/id_rsa -N ''
 
 # Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine
 # inside the container "overrideCommand": false is set in devcontainer.json.
 # The script will also execute CMD if you need to alter startup behaviors.
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD [ "sleep", "infinity" ]
+CMD ["sleep", "infinity" ]
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
