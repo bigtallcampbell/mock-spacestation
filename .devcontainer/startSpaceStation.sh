@@ -8,7 +8,7 @@
 #
 #
 
-MOCK_SPACESTATION_NETWORK_NAME="ISS-vNet"
+MOCK_SPACESTATION_NETWORK_NAME="mock-spacestation-vnet"
 MOCK_SPACESTATION_CONTAINER_NAME="mock-spacestation"
 MOCK_SPACESTATION_IMAGE_NAME="mock-spacestation-image"
 MOCK_SPACESTATION_IMAGE_TAG="latest"
@@ -18,6 +18,10 @@ if ! [ -f "/root/.ssh/id_rsa" ];then
     ssh-keygen -f /root/.ssh/id_rsa -N ''
 fi
 
+HAS_NETWORK=$(docker network ls | grep $MOCK_SPACESTATION_NETWORK_NAME)
+if [ -z "${HAS_NETWORK}" ]; then
+    docker network create --internal $MOCK_SPACESTATION_NETWORK_NAME
+fi
 
 CONTAINER_RUNNING=$(docker container ls | grep $MOCK_SPACESTATION_CONTAINER_NAME)
 if [ -z "${CONTAINER_RUNNING}" ]; then #Grep results is null.  Container is not running
@@ -34,15 +38,32 @@ if [ -z "${CONTAINER_RUNNING}" ]; then #Grep results is null.  Container is not 
         docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /workspaces/mock-spacestation/.devcontainer/Dockerfile.SpaceStation /
     fi
 
-    docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --name $MOCK_SPACESTATION_CONTAINER_NAME "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
+    docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --network $MOCK_SPACESTATION_NETWORK_NAME --name $MOCK_SPACESTATION_CONTAINER_NAME "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
 
 fi
 
-MOCK_SPACESTATION_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $MOCK_SPACESTATION_CONTAINER_NAME)
-ssh-keyscan $MOCK_SPACESTATION_IP >> /root/.ssh/known_hosts
-echo "$MOCK_SPACESTATION_IP mock-spacestation" >> /etc/hosts
+HAS_NETWORK=$(docker network ls | grep $MOCK_SPACESTATION_NETWORK_NAME)
+if [ -z "${HAS_NETWORK}" ]; then
+    docker network create --internal $MOCK_SPACESTATION_NETWORK_NAME
+fi
 
-ssh-keyscan mock-spacestation >> /root/.ssh/known_hosts
-docker cp /root/.ssh/id_rsa mock-spacestation:/root/.ssh/id_rsa
-docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/id_rsa.pub
-docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/authorized_keys
+MOCK_SPACESTATION_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $MOCK_SPACESTATION_CONTAINER_NAME)
+
+HAS_HOSTS_ENTRY=$(cat /etc/hosts | grep $MOCK_SPACESTATION_CONTAINER_NAME)
+if [ -z "${HAS_HOSTS_ENTRY}" ]; then
+    echo "$MOCK_SPACESTATION_IP $MOCK_SPACESTATION_CONTAINER_NAME" >> /etc/hosts
+fi
+
+HAS_KNOWN_HOSTS=$(cat /root/.ssh/known_hosts | grep $MOCK_SPACESTATION_CONTAINER_NAME)
+if [ -z "${HAS_KNOWN_HOSTS}" ]; then
+    ssh-keyscan mock-spacestation >> /root/.ssh/known_hosts
+    ssh-keyscan $MOCK_SPACESTATION_IP >> /root/.ssh/known_hosts
+    docker cp /root/.ssh/id_rsa mock-spacestation:/root/.ssh/id_rsa
+    docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/id_rsa.pub
+    docker cp /root/.ssh/id_rsa.pub mock-spacestation:/root/.ssh/authorized_keys
+fi
+
+echo "Mock-GroundStation and Mock-SpaceStation successfully configured."
+echo "Access Mock-SpaceStation: ssh root@mock-spacestation"
+
+
