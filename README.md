@@ -108,3 +108,8 @@ bash ./sync-with-spacestation.sh
 ls /mock-groundstation/sync
 cat /mock-groundstation/sync/space_station_message.txt
 ````
+
+![Sync Example](./docs/images/space_station_sync_example.png)
+
+# Build your first app
+*pending*
