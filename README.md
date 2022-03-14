@@ -35,7 +35,11 @@ To use the Mock SpaceStation, you'll need:
     1. Install [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) VSCode Extension
 1. Clone this repo
 
-alternatively you can use Codespaces
 
-1. test
+*Alternatively* you can use Codespaces
 
+![codespaces](./docs/images/codespaces.png)]
+
+
+## Running Mock GroundStation
+1. Open the
