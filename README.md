@@ -38,8 +38,33 @@ To use the Mock SpaceStation, you'll need:
 
 *Alternatively* you can use Codespaces
 
-![codespaces](./docs/images/codespaces.png)]
+![codespaces](./docs/images/codespaces.png)
 
 
 ## Running Mock GroundStation
-1. Open the
+1. Open the folder in VSCode and wait for the "Folder contains a Dev Container..." prompt.  Choose reopen in Container.
+
+    ![DevContainer Prompt](./docs/images/DevContainer-Notification.png)
+    - ***NOTE:*** If the prompt does not show, select F1 to open the command palette and select the *Rebuild Container Without Cache* option
+
+        ![DevContainer RebuildMenu Option](./docs/images/DevContainer-RebuildMenu.png)
+
+1.	It may take a moment to build.  Just hang out for a second....
+1.  The "Mock GroundStation" banner means you're good to go!
+![Mock Ground Station](./docs/images/ground_station.png)]
+1. The Mock GroundStation has docker (moby) configured and automatically provisions local SSH keys for interacting with the Mock SpaceStation.  The Mock SpaceStation is actually a local container with restricted network access and bandwidth limits.  You can see the companion Mock SpaceStation (container) via
+```` bash
+docker container ls
+````
+
+
+## Connecting to Mock SpaceStation
+The Mock GroundStation deployment automatically builds and configures the companion Mock SpaceStation.  The docker
+
+Access is done via SSH:
+```` bash
+#Connect to the Mock-SpaceStation
+ssh root@mock-spacestation
+````
+
+The Mock SpaceStation
