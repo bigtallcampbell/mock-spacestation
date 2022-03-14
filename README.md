@@ -41,7 +41,7 @@ To use the Mock SpaceStation, you'll need:
 ![codespaces](./docs/images/codespaces.png)
 
 
-## Running Mock GroundStation
+# Running Mock GroundStation
 1. Open the folder in VSCode and wait for the "Folder contains a Dev Container..." prompt.  Choose reopen in Container.
 
     ![DevContainer Prompt](./docs/images/DevContainer-Notification.png)
@@ -59,7 +59,7 @@ docker container ls
 ![Mock GroundStation Containers](./docs/images/ground_station_docker_ls.png)
 
 
-## Connecting to Mock SpaceStation
+# Connecting to Mock SpaceStation
 The Mock GroundStation deployment automatically builds and configures the companion Mock SpaceStation.  Docker (moby) is installed and configured to run isolated from the host's instance, as well as the SSH server.  Keys are automatically generated, deployed, and a bunch of other configuration.  The good news is that it's all automated!
 
 Once the container opens, accessing the Mock SpaceStation is done via SSH:
@@ -67,5 +67,44 @@ Once the container opens, accessing the Mock SpaceStation is done via SSH:
 #Connect to the Mock-SpaceStation
 ssh root@mock-spacestation
 ````
+![Mock SpaceStation](./docs/images/connect_to_space_station.png)
 
-The Mock SpaceStation
+# Synchronizing Mock SpaceStation nad Mock GroundStation
+A special folder on both Mock GroundStation and Mock SpaceStation called "sync" is pre-created and used to copy files between the Ground and Space Stations.  This simulates a similar process to copy files to the International Space Station, with similar network constraints
+
+To run (from Mock GroundStation):
+```` bash
+bash ./sync-with-spacestation.sh
+````
+
+Full example, starting from the Mock GroundStation
+From Mock GroundStation:
+```` bash
+#give us an output file
+echo 'Hello Mock SpaceStation (from Mock GroundStation)!' > /mock-groundstation/sync/ground_station_message.txt
+
+#sync with SpaceStation
+bash ./sync-with-spacestation.sh
+
+#Connect to the Mock SpaceStation
+ssh root@mock-spacestation
+
+#Display the file contents
+cat ~/sync/ground_station_message.txt
+
+#Update the file in space
+echo 'Hello Mock GroundStation (from Mock SpaceStation)!' > ~/sync/space_station_message.txt
+
+# disconnect from Space Station
+exit
+
+# Check contents of file - SpaceStation message NOT listed yet
+ls /mock-groundstation/sync
+
+#sync with SpaceStation
+bash ./sync-with-spacestation.sh
+
+# Check contents of file - we got SpaceStation's message!
+ls /mock-groundstation/sync
+cat /mock-groundstation/sync/space_station_message.txt
+````
