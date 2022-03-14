@@ -2,9 +2,10 @@
 
 ## What is mock-spacestation?
 
-mock-spacestation is a [Bicep template](https://aka.ms/bicep) that deploys a Mock Spacestation and Mock Groundstation to Azure to enable developers and enthusiasts to develop and test their own workloads for space with similar constraints to those seen working with the International Space Station (ISS).
+mock-spacestation is a VSCode devContainer that deploys a Mock Spacestation and Mock Groundstation to Azure to enable developers and enthusiasts to develop and test their own workloads for space with similar constraints to those seen working with the International Space Station (ISS).
 
-The Mock Groundstation and Mock Spacestation virtual machines deployed by this template are how the Azure Space team developed and tested their experiment workload while preparing for the installation of the Hewlett Packard Enterprise (HPE) Spaceborne Computer 2 (SBC2) aboard the ISS.
+When deployed via VSCode or Codespaces, the main container is the 'Mock Ground Station'.
+
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fmock-spacestation%2Fmain%2FmockSpacestation.json)
 
@@ -48,11 +49,11 @@ You have two options for deploying mock-spacestation:
 
 If you're comfortable with the command line, the Azure CLI provides the `deployment` command group to deploy the Mock Spacestation and Mock Groundstation.
 
-1. First, ensure you're logged into the Azure CLI and have set the subscription you want to deploy into: 
+1. First, ensure you're logged into the Azure CLI and have set the subscription you want to deploy into:
 
     ```plaintext
     az login
-    az account set --subscription <subscription name or ID> 
+    az account set --subscription <subscription name or ID>
     ```
 
     Here's a link to the documentation if you need more help logging in: [https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest#az_login](https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest#az_login)
