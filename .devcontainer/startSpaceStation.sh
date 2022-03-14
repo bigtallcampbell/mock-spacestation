@@ -17,6 +17,23 @@ MOCK_SPACESTATION_NETWORK_NAME="mock-spacestation-vnet"
 MOCK_SPACESTATION_CONTAINER_NAME="mock-spacestation"
 MOCK_SPACESTATION_IMAGE_NAME="mock-spacestation-image"
 MOCK_SPACESTATION_IMAGE_TAG="latest"
+QUICK_START_IMAGE_NAME="mock-spacestation-quick-start-image"
+
+#Passable Parameters:
+quick_start=${quick_start:-quick_start}
+quick_start = "False"
+
+#Getting parameter values
+while [ $# -gt 0 ]; do
+
+   if [[ $1 == *"--"* ]]; then
+        param="${1/--/}"
+        declare $param="$2"
+        # echo $1 $2 // Optional to see the parameter:value result
+   fi
+
+  shift
+done
 
 if ! [ -f "/root/.ssh/id_rsa" ];then
     #SSH Keys don't exist.  Create them so we can use them in Mock-SpaceStation
@@ -53,9 +70,15 @@ if [ -z "${CONTAINER_RUNNING}" ]; then #Grep results is null.  Container is not 
     IMAGE_DEPLOYED=$(docker images | grep $MOCK_SPACESTATION_IMAGE_NAME)
     if [ -z "${IMAGE_DEPLOYED}" ]; then #Grep results is null.  Image is not deployed.  Deploy build it
         docker build -t "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /mock-groundstation/.devcontainer/Dockerfile.SpaceStation /mock-groundstation/.devcontainer
+        if [ $quick_start = "True" ]; then 
+            docker build -t "$QUICK_START_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG" --no-cache -f /mock-groundstation/.devcontainer/Dockerfile.QuickStart /mock-groundstation/.devcontainer
+        fi
     fi
 
     docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --network $MOCK_SPACESTATION_NETWORK_NAME --name $MOCK_SPACESTATION_CONTAINER_NAME "$MOCK_SPACESTATION_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
+    if [ $quick_start = "True" ]; then 
+        docker run -d -id --init --privileged --restart=always --mount "source=space-station-dind-var-lib-docker,target=/var/lib/docker,type=volume" --network $MOCK_SPACESTATION_NETWORK_NAME --name $MOCK_SPACESTATION_CONTAINER_NAME "$QUICK_START_IMAGE_NAME:$MOCK_SPACESTATION_IMAGE_TAG"
+    fi
 
 fi
 
