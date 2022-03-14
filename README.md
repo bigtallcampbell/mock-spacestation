@@ -60,7 +60,7 @@ docker container ls
 
 
 # Connecting to Mock SpaceStation
-The Mock GroundStation deployment automatically builds and configures the companion Mock SpaceStation.  Docker (moby) is installed and configured to run isolated from the host's instance, as well as the SSH server.  Keys are automatically generated, deployed, and a bunch of other configuration.  The good news is that it's all automated!
+The Mock GroundStation deployment automatically builds and configures the companion Mock SpaceStation.  Docker (moby) is installed, configured, and running, an SSH server is deployed, keys are automatically generated, and a bunch of other configuration.  The good news is that it's all automated!
 
 Once the container opens, accessing the Mock SpaceStation is done via SSH:
 ```` bash
@@ -69,7 +69,7 @@ ssh root@mock-spacestation
 ````
 ![Mock SpaceStation](./docs/images/connect_to_space_station.png)
 
-# Synchronizing Mock SpaceStation nad Mock GroundStation
+# Synchronizing Mock SpaceStation and Mock GroundStation
 A special folder on both Mock GroundStation and Mock SpaceStation called "sync" is pre-created and used to copy files between the Ground and Space Stations.  This simulates a similar process to copy files to the International Space Station, with similar network constraints
 
 To run (from Mock GroundStation):
