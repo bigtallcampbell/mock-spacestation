@@ -31,9 +31,6 @@ az storage blob download --account-name $account_name --account-key $account_key
 echo "Creating Config directory"
 mkdir $download_path/config
 
-echo "Download Configuration Files"
-az storage blob download --account-name $account_name --account-key $account_key -c dockerconfig -f ./config/config.json -n config.json
-
 echo "Creating Scripts Directory"
 mkdir $download_path/scripts
 

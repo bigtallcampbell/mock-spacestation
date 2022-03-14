@@ -353,3 +353,4 @@ MigrationBackup/
 
 # Ignore generated private key
 mockSpacestationPrivateKey
+container.tar

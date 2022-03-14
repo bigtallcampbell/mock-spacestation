@@ -1,4 +1,5 @@
 FROM python:3.9-slim-buster
-ADD quick-start/run.py /
-ADD quick-start/config/ config/
+RUN ls
+ADD ./quick-start/run.py /
+ADD ./quick-start/config/ config/
 CMD [ "python3", "./run.py"]

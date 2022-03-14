@@ -5,6 +5,7 @@ set -e # exit on error
 image_name=${image_name:-image_name}
 account_name=${account_name:-account_name}
 account_key=${account_key:-account_key}
+docker_path=${docker_path:-docker_path}
 config_file_path=${config_file_path:-config_file_path}
 
 #Getting parameter values
@@ -20,7 +21,7 @@ while [ $# -gt 0 ]; do
 done
 
 echo "Step 1 - Build Docker Image"
-docker build -t="$image_name:latest" -f="./DockerFile" .
+docker build -t="$image_name:latest" -f="$docker_path" .
 
 echo "Step 2 - Save Docker Image"
 docker save "$image_name:latest" > container.tar
@@ -33,12 +34,9 @@ az storage container create --account-name $account_name --account-key $account_
 echo "Step 4 - Upload docker tar file"
 az storage blob upload --account-name $account_name --account-key $account_key -c dockerimage -f container.tar -n container.tar
 
-echo "Step 5 - Upload Config Files"
-az storage blob upload --account-name $account_name --account-key $account_key -c dockerconfig -f config_file_path/config.json -n config.json
-
-echo "Step 6 - Upload Execution Scripts"
-az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./docker_cleanup.sh -n docker_cleanup.sh
-az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./download_container.sh -n download_container.sh
-az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./run_experiment.sh -n run_experiment.sh
+echo "Step 5 - Upload Execution Scripts"
+az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./devops-scripts/docker_cleanup.sh -n docker_cleanup.sh
+az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./devops-scripts/download_container.sh -n download_container.sh
+az storage blob upload --account-name $account_name --account-key $account_key -c scripts -f ./devops-scripts/run_experiment.sh -n run_experiment.sh
 
 echo "Prepartion Process Complete"
