@@ -6,7 +6,6 @@ image_name=${image_name:-image_name}
 account_name=${account_name:-account_name}
 account_key=${account_key:-account_key}
 docker_path=${docker_path:-docker_path}
-config_file_path=${config_file_path:-config_file_path}
 
 #Getting parameter values
 while [ $# -gt 0 ]; do
@@ -28,7 +27,6 @@ docker save "$image_name:latest" > container.tar
 
 echo "Step 3 - Build Storage containers"
 az storage container create --account-name $account_name --account-key $account_key -n dockerimage
-az storage container create --account-name $account_name --account-key $account_key -n dockerconfig
 az storage container create --account-name $account_name --account-key $account_key -n scripts
 
 echo "Step 4 - Upload docker tar file"
